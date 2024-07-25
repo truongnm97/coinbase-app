@@ -8,18 +8,18 @@
  */
 export const encodeArray = (paramName: string, arr: any[]): string => {
   return arr.reduce<string>((acc, cur, index) => {
-    const prefix = index === 0 ? '' : '&'
+    const prefix = index === 0 ? "" : "&";
 
     return (
       acc +
       `${prefix}${paramName}[]=${
-        typeof cur === 'object'
+        typeof cur === "object"
           ? encodeURIComponent(JSON.stringify(cur))
           : encodeURIComponent(`${cur}`)
       }`
-    )
-  }, '')
-}
+    );
+  }, "");
+};
 
 /**
  * Create a query parameter string for an object. The resulting query parameter
@@ -31,22 +31,22 @@ export const encodeArray = (paramName: string, arr: any[]): string => {
  */
 export const encodeObject = (
   paramName: string,
-  obj: Record<string, unknown>
+  obj: Record<string, unknown>,
 ): string => {
   return Object.entries(obj).reduce((acc, cur, index) => {
-    const [key, val] = cur
-    const prefix = index === 0 ? '' : '&'
+    const [key, val] = cur;
+    const prefix = index === 0 ? "" : "&";
 
     return (
       acc +
       `${prefix}${paramName}[${key}]=${
-        typeof val === 'object'
+        typeof val === "object"
           ? encodeURIComponent(JSON.stringify(val))
           : encodeURIComponent(`${val}`)
       }`
-    )
-  }, '')
-}
+    );
+  }, "");
+};
 
 /**
  * Create a query parameter string for an object with each key being a query
@@ -60,22 +60,22 @@ export const encodeObject = (
 export const encodeQueryParams = (queryParams: Record<string, any>): string => {
   return Object.entries(queryParams).reduce(
     (finalUri, queryParam, index): string => {
-      const [paramName, paramValue] = queryParam
+      const [paramName, paramValue] = queryParam;
 
-      let encodedParam
+      let encodedParam;
 
       if (Array.isArray(paramValue)) {
-        encodedParam = encodeArray(paramName, paramValue)
-      } else if (typeof paramValue === 'object') {
-        encodedParam = encodeObject(paramName, paramValue)
+        encodedParam = encodeArray(paramName, paramValue);
+      } else if (typeof paramValue === "object") {
+        encodedParam = encodeObject(paramName, paramValue);
       } else {
-        encodedParam = encodeURIComponent(`${paramValue}`)
+        encodedParam = `${paramName}=${encodeURIComponent(`${paramValue}`)}`;
       }
 
-      const prefix = index === 0 ? '' : '&'
+      const prefix = index === 0 ? "" : "&";
 
-      return `${prefix}${encodedParam}`
+      return `${finalUri}${prefix}${encodedParam}`;
     },
-    ''
-  )
-}
+    "",
+  );
+};
